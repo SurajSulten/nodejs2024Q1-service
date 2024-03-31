@@ -1,5 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
 import { AlbumService } from './album.service';
+import { CreateAlbumDto } from './dto/create-album.dto';
+import { UpdateAlbumDto } from './dto/update-album.dto';
 
 
 @Controller('album')
@@ -30,7 +32,7 @@ export class AlbumController {
 
     @Put(':id')
     async update(
-        @Body() updateAlbumDto: UpdateAlbomDto,
+        @Body() updateAlbumDto: UpdateAlbumDto,
         @Param('id') id: string,
     ) {
         return await this.albumService.updateAlbum(updateAlbumDto, id);
