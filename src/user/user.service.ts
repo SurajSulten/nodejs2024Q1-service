@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import{ v4 as uuidv4} from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 // import { IUser } from 'src/types/interfaces';
@@ -34,6 +34,24 @@ export class UserService {
             !userDto.password || 
             typeof userDto.login !== 'string' ||
             typeof userDto.password !== 'string'
-        ) {}
+        ) {
+            throw new BadRequestException(
+                'Request body does not contain required fields or their format is npt correct' 
+            );
+        }
+        const newUser = {
+            ...userDto,
+            id: uuidv4(),
+            version: 1,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+        };
+        this.db.users.push(newUser);
+        const { password, ...userWithoutPassword } = newUser;
+        return userWithoutPassword;
+    }
+
+    async deleteUser(id: string) {
+        deleteEntityFromCollection(id, this.db.users);
     }
 }
