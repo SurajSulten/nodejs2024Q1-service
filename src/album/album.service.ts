@@ -1,6 +1,8 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DB } from 'src/db'
 import { validateIdFormat } from 'src/helpers/validateIdFormat';
+import { CreateAlbumDto } from './dto/create-album.dto';
+import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Injectable()
 export class AlbumService {
@@ -47,11 +49,11 @@ export class AlbumService {
             );
         }
         validateIdFormat(id);
-        const updateAlbum = updateEntityInCollection<IAlbum>(
+        const updatedAlbum = updateEntityInCollection<IAlbum>(
             id,
             updateAlbumDto,
             this.db.albums
         );
-        return updateAlbum;
+        return updatedAlbum;
     }
 }

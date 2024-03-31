@@ -1,4 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { DB } from 'src/db'
+import { CreateArtistDto } from './dto/create-artist.dto';
+import { UpdateArtistDto } from './dto/update-artist.dto';
+import { validateIdFormat } from 'src/helpers/validateIdFormat';
 
 @Injectable()
-export class ArtistService {}
+export class ArtistService {
+    constructor(@Inject('DB_CONNECTION') private readonly db: DB) {}
+
+    private isInvalidDto(dto: CreateArtistDto | UpdateArtistDto) {
+        return (
+            !Object.keys(dto).includes('grammy') || 
+            !dto.name ||
+            typeof dto.grammy !== 'boolean' ||
+            typeof dto.name !== 'string'
+        );
+    }
+
+    async getArtist() {
+        return this.db.artist;
+    }
+
+    async getArtistById(id: string) {
+        return getEntityById<IArtist>(id, this.db.artists);
+    }
+
+    async createArtist(createArtistDto: CreateArtistDto) {
+        if(this.isInvalidDto(createArtistDto)) {
+            throw new BadRequestException(
+                'Request body does not contain required fields or their format is not correct'
+            )
+        } else {
+            return addEntityCollection(createArtistDto, this.db.artists);
+        }
+    }
+
+    async deleteArtist(id: string) {
+        deleteEntityFromCollection(id, this.db.artists);
+        deleteIdFromFavs(id, this.db.favs.artists);
+        this.db.albums = replaceIdToNull<IAlbum>(id, this.db.albums, 'artistId');
+        this.db.tracks = replaceIdToNull<ITrack>(id, this.db.tracks, 'artistId');
+    }
+
+    async updateArtist(updateArtistDto: UpdateArtistDto, id: string) {
+        if(this.isInvalidDto(updateArtistDto)) {
+            throw new BadRequestException(
+                'Request body does not contain required fields or their format is not correct'
+            ); 
+        }
+        validateIdFormat(id);
+        const updatedArtist = updateEntityInCollection<IArtist>(
+            id,
+            updateArtistDto,
+            this.db.artists,
+        );
+        return updatedArtist;
+    }
+}
+
