@@ -1,6 +1,9 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DB } from 'src/db';
 import { validateIdFormat } from 'src/helpers/validateIdFormat';
+import { Track } from 'src/types/interfaces';
+import { UpdateTrackDto } from './dto/update-track.dto';
+import { CreateTrackDto } from './dto/create-track.dto';
 
 @Injectable()
 export class TrackService {
@@ -15,7 +18,7 @@ export class TrackService {
     }
 
     async getTrackById(id: string) {
-        return getEntityById<ITrack>(id, this.db.tracks);
+        return getEntityById<Track>(id, this.db.tracks);
     }
 
     async createTrack(createTrackDto: CreateTrackDto) {
@@ -40,7 +43,7 @@ export class TrackService {
             );
         }
         validateIdFormat(id);
-        const updatedTrack = updateEntityInCollection<ITrack>(
+        const updatedTrack = updateEntityInCollection<Track>(
             id,
             updateTrackDto,
             this.db.traks,

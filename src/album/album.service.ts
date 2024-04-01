@@ -3,6 +3,7 @@ import { DB } from 'src/db'
 import { validateIdFormat } from 'src/helpers/validateIdFormat';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { Album, Track } from 'src/types/interfaces';
 
 @Injectable()
 export class AlbumService {
@@ -22,7 +23,7 @@ export class AlbumService {
     }
 
     async getAlbumById(id: string) {
-        return getEntityById<IAlbum>(id, this.db.albums);
+        return getEntityById<Album>(id, this.db.albums);
     }
 
     async createAlbum(createAlbumDto: CreateAlbumDto) {
@@ -38,7 +39,7 @@ export class AlbumService {
     async deleteAlbum(id: string) {
         deleteEntityFromCollection(id, this.db.albums);
         
-        this.db.tracks = replaceIdToNull<ITrack>(id, this.db.tracks, 'albumId');
+        this.db.tracks = replaceIdToNull<Track>(id, this.db.tracks, 'albumId');
         deleteIdFromFavs(id, this.db.favs.albums);
     }
 
@@ -49,7 +50,7 @@ export class AlbumService {
             );
         }
         validateIdFormat(id);
-        const updatedAlbum = updateEntityInCollection<IAlbum>(
+        const updatedAlbum = updateEntityInCollection<Album>(
             id,
             updateAlbumDto,
             this.db.albums
@@ -57,3 +58,5 @@ export class AlbumService {
         return updatedAlbum;
     }
 }
+
+
