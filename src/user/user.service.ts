@@ -3,6 +3,7 @@ import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundEx
 import{ v4 as uuidv4} from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import { validateIdFormat } from 'src/helpers/validateIdFormat';
+import { User } from 'src/types/interfaces';
 // import { IUser } from 'src/types/interfaces';
 // import {
 //     deleteEntityFromCollection,
@@ -70,7 +71,7 @@ export class UserService {
             );
         }
         validateIdFormat(id);
-        const user: IUser = this.db.users.find((user) => user.id === id);
+        const user: User = this.db.users.find((user: { id: string; }) => user.id === id);
 
         if(user) {
             if(updateUserDto.oldPassword !== user.password) {

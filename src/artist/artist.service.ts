@@ -3,6 +3,7 @@ import { DB } from 'src/db'
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { validateIdFormat } from 'src/helpers/validateIdFormat';
+import { Album, Artist, Track } from 'src/types/interfaces';
 
 @Injectable()
 export class ArtistService {
@@ -17,12 +18,12 @@ export class ArtistService {
         );
     }
 
-    async getArtist() {
+    async getArtists() {
         return this.db.artist;
     }
 
     async getArtistById(id: string) {
-        return getEntityById<IArtist>(id, this.db.artists);
+        return getEntityById<Artist>(id, this.db.artists);
     }
 
     async createArtist(createArtistDto: CreateArtistDto) {
@@ -38,8 +39,8 @@ export class ArtistService {
     async deleteArtist(id: string) {
         deleteEntityFromCollection(id, this.db.artists);
         deleteIdFromFavs(id, this.db.favs.artists);
-        this.db.albums = replaceIdToNull<IAlbum>(id, this.db.albums, 'artistId');
-        this.db.tracks = replaceIdToNull<ITrack>(id, this.db.tracks, 'artistId');
+        this.db.albums = replaceIdToNull<Album>(id, this.db.albums, 'artistId');
+        this.db.tracks = replaceIdToNull<Track>(id, this.db.tracks, 'artistId');
     }
 
     async updateArtist(updateArtistDto: UpdateArtistDto, id: string) {
@@ -49,7 +50,7 @@ export class ArtistService {
             ); 
         }
         validateIdFormat(id);
-        const updatedArtist = updateEntityInCollection<IArtist>(
+        const updatedArtist = updateEntityInCollection<Artist>(
             id,
             updateArtistDto,
             this.db.artists,
