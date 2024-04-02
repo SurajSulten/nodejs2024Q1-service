@@ -1,9 +1,12 @@
 import { UpdateUserDto } from './dto/update-user.dto';
+import { DB } from 'src/db'
 import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import{ v4 as uuidv4} from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import { validateIdFormat } from 'src/helpers/validateIdFormat';
 import { User } from 'src/types/interfaces';
+import { getEntityById } from 'src/helpers/getEntityById';
+import { deleteEntityFromCollection } from 'src/helpers/deleteEntityFromCollection';
 // import { IUser } from 'src/types/interfaces';
 // import {
 //     deleteEntityFromCollection,
@@ -26,7 +29,7 @@ export class UserService {
         validateIdFormat(id);
         const user = getEntityById(id, this.db.users);
         if(user) {
-            const { password, userWithoutPassword } = user;
+            const { password, ...userWithoutPassword } = user;
             return userWithoutPassword;
         }
     }
@@ -59,10 +62,10 @@ export class UserService {
         deleteEntityFromCollection(id, this.db.users);
     }
 
-    async updatePassword(UpdateUserDto: UpdateUserDto, id: string) {
+    async updatePassword(updateUserDto: UpdateUserDto, id: string) {
         if(
-            !UpdateUserDto.oldPassword ||
-            !UpdateUserDto.newPassword || 
+            !updateUserDto.oldPassword ||
+            !updateUserDto.newPassword || 
             typeof updateUserDto.oldPassword !== 'string' ||
             typeof updateUserDto.newPassword !== 'string' 
         ) {
@@ -71,20 +74,20 @@ export class UserService {
             );
         }
         validateIdFormat(id);
-        const user: User = this.db.users.find((user: { id: string; }) => user.id === id);
+        const user: User = this.db.users.find((user) => user.id === id);
 
         if(user) {
             if(updateUserDto.oldPassword !== user.password) {
                 throw new ForbiddenException('Old password is wrong');
             }
-            const updateUser = {
+            const updatedUser = {
                 ...user,
                 password: updateUserDto.newPassword,
                 version: user.version + 1,
                 updatedAt: Date.now() 
             };
             const userIdx = this.db.users.indexOf(user);
-            this.db.users[userIdx] = updateUser;
+            this.db.users[userIdx] = updatedUser;
             const { password, ...userWithoutPassword } = updatedUser;
             return userWithoutPassword;
         } else {

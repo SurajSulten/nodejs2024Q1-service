@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export const addEntityToCollection = <T extends { id: string }> (
-    entityDto: Record<string, unknown>,
+    entityDto: Omit<T, 'id'>,
     collection: T[],
 ): T => {
     const newEntity = {

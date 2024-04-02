@@ -4,6 +4,13 @@ import { validateIdFormat } from 'src/helpers/validateIdFormat';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album, Track } from 'src/types/interfaces';
+import { getEntityById, } from 'src/helpers/getEntityById';
+import { isIdValid } from 'src/helpers/isIdValid';
+import { addEntityToCollection } from 'src/helpers/addEntityToCollection';
+import { deleteEntityFromCollection } from 'src/helpers/deleteEntityFromCollection';
+import { replaceIdToNull } from 'src/helpers/replaceIdToNull';
+import { deleteIdFromFavs } from 'src/helpers/deleteIdFromFavs';
+import { updateEntityInCollection } from 'src/helpers/updateEntityInCollection';
 
 @Injectable()
 export class AlbumService {
@@ -14,7 +21,7 @@ export class AlbumService {
             !dto.name || 
             typeof dto.year !== 'number' ||
             typeof dto.name !== 'string' ||
-            !isValid(dto.artistId)
+            !isIdValid(dto.artistId)
         );
     }
 

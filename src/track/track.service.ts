@@ -4,6 +4,12 @@ import { validateIdFormat } from 'src/helpers/validateIdFormat';
 import { Track } from 'src/types/interfaces';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { CreateTrackDto } from './dto/create-track.dto';
+import { isIdValid } from 'src/helpers/isIdValid';
+import { getEntityById } from 'src/helpers/getEntityById';
+import { addEntityToCollection } from 'src/helpers/addEntityToCollection';
+import { deleteEntityFromCollection } from 'src/helpers/deleteEntityFromCollection';
+import { updateEntityInCollection } from 'src/helpers/updateEntityInCollection';
+import { deleteIdFromFavs } from 'src/helpers/deleteIdFromFavs';
 
 @Injectable()
 export class TrackService {
@@ -33,7 +39,7 @@ export class TrackService {
 
     async deleteTrack(id: string) {
         deleteEntityFromCollection(id, this.db.tracks);
-        deleteFromFavs(id, this.db.favs.tracks);
+        deleteIdFromFavs(id, this.db.favs.tracks);
     }
 
     async updateTrack(updateTrackDto: UpdateTrackDto, id: string) {
@@ -51,3 +57,5 @@ export class TrackService {
         return updatedTrack;
     }
 }
+
+

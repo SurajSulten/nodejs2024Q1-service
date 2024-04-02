@@ -4,6 +4,12 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { validateIdFormat } from 'src/helpers/validateIdFormat';
 import { Album, Artist, Track } from 'src/types/interfaces';
+import { getEntityById } from 'src/helpers/getEntityById';
+import { deleteEntityFromCollection } from 'src/helpers/deleteEntityFromCollection';
+import { deleteIdFromFavs } from 'src/helpers/deleteIdFromFavs';
+import { replaceIdToNull } from 'src/helpers/replaceIdToNull';
+import { updateEntityInCollection } from 'src/helpers/updateEntityInCollection';
+import { addEntityToCollection } from 'src/helpers/addEntityToCollection';
 
 @Injectable()
 export class ArtistService {
@@ -32,7 +38,7 @@ export class ArtistService {
                 'Request body does not contain required fields or their format is not correct'
             )
         } else {
-            return addEntityCollection(createArtistDto, this.db.artists);
+            return addEntityToCollection(createArtistDto, this.db.artists);
         }
     }
 
@@ -58,4 +64,6 @@ export class ArtistService {
         return updatedArtist;
     }
 }
+
+
 

@@ -1,7 +1,7 @@
 import { AlbumId, ArtistId } from "src/types/interfaces";
 import { validateIdFormat } from "./validateIdFormat";
 
-export const isValidId = (id: ArtistId | AlbumId ) => {
+export const isIdValid = (id: ArtistId | AlbumId ) => {
     if(id) {
         validateIdFormat(id);
     }

@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB } from 'src/db'
+import { addIdToFavsCollection } from 'src/helpers/addIdToFavsCollection';
+import { deleteEntityIdFromFavs } from 'src/helpers/deleteEntityIdFromFavs';
 import { Album, Artist, FavoritesResponse, Track } from 'src/types/interfaces';
 
 @Injectable()
@@ -18,12 +20,13 @@ export class FavsService {
                 const favorite = this.db[key].find((el: any) => el.id === favId);
                 return favorite
             });
-            return favsResponse;
+            favsResponse[key] = favorites;
         })
+        return favsResponse;
     }
 
     async addTrack(id: string) {
-        const track = addIdToFavsColection<Track>(
+        const track = addIdToFavsCollection<Track>(
             id,
             this.db.tracks,
             this.db.favs.tracks
@@ -32,7 +35,7 @@ export class FavsService {
     }
 
     async addAlbum(id: string) {
-        const album = addIdToFavsColection<Album>(
+        const album = addIdToFavsCollection<Album>(
             id,
             this.db.albums,
             this.db.favs.albums
@@ -41,7 +44,7 @@ export class FavsService {
     }
 
     async addArtist(id: string) {
-        const artist = addIdToFavsColection<Artist>(
+        const artist = addIdToFavsCollection<Artist>(
             id,
             this.db.artists,
             this.db.favs.artists
