@@ -1,8 +1,8 @@
-import { TAlbumId, TArtistId } from 'src/types/interfaces';
+import { AlbumId, ArtistId } from 'src/types/interfaces';
 
 export class CreateTrackDto {
     readonly name: string;
-    readonly artistId: TArtistId;
-    readonly albumId: TAlbumId;
+    readonly artistId: ArtistId;
+    readonly albumId: AlbumId;
     readonly duration: number;
 }

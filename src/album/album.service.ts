@@ -1,5 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DB } from 'src/db'
+import { v4 as uuidv4 } from 'uuid';
 import { validateIdFormat } from 'src/helpers/validateIdFormat';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -39,6 +40,7 @@ export class AlbumService {
                 'Request body does not contain required fields or their format is not correct'
             )
         } else {
+            this.db.albums.push({...createAlbumDto, id: uuidv4()})
             return addEntityToCollection(createAlbumDto, this.db.albums);
         }
     }

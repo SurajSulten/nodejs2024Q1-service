@@ -25,7 +25,7 @@ export class ArtistService {
     }
 
     async getArtists() {
-        return this.db.artist;
+        return this.db.artists;
     }
 
     async getArtistById(id: string) {

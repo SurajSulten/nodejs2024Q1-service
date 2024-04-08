@@ -1,7 +1,7 @@
-import{ TArtistId } from 'src/types/interfaces'; 
+import{ ArtistId } from 'src/types/interfaces'; 
 
 export class UpdateAlbumDto {
     readonly name: string;
     readonly year: number;
-    readonly artistId: TArtistId;
+    readonly artistId: ArtistId;
 }

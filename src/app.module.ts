@@ -11,10 +11,14 @@ import { TrackController } from './track/track.controller';
 import { TrackModule } from './track/track.module';
 import { FavsController } from './favs/favs.controller';
 import { FavsModule } from './favs/favs.module';
+import { db } from './db';
 
 @Module({
   imports: [UserModule, AlbumModule, ArtistModule, TrackModule, FavsModule],
   controllers: [AppController, UserController, AlbumController, ArtistController, TrackController, FavsController],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: 'DB_CONNECTION',
+    useValue: db,
+},],
 })
 export class AppModule {}

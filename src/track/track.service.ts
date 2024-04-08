@@ -52,7 +52,7 @@ export class TrackService {
         const updatedTrack = updateEntityInCollection<Track>(
             id,
             updateTrackDto,
-            this.db.traks,
+            this.db.tracks,
         );
         return updatedTrack;
     }
